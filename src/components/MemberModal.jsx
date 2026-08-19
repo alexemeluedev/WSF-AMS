@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { cellService } from "../api/apiclient"; // Adjust path to your file destination
+import { cellService } from "../api/apiClient"; // Adjust path to your file destination
 
 export const MemberModal = ({ isOpen, onClose, onSave, initialData }) => {
   // 1. STATE INITIALIZATION SYNCHRONIZED WITH MONGOOSE FIELDS
