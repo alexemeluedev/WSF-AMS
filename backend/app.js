@@ -15,17 +15,30 @@ dotenv.config();
 
 const app = express();
 
-const allowedOrigins = [
-  process.env.CLIENT_URL || "http://localhost:5173",
-  "http://localhost:5174",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-];
+// const allowedOrigins = [
+//   process.env.CLIENT_URL || "http://localhost:5173",
+//   "http://localhost:5174",
+//   "http://127.0.0.1:5173",
+//   "http://127.0.0.1:5174",
+//   "https://wsf-ams.vercel.app/login",
+//   "https://wsf-ams-git-main-ams-990e.vercel.app/login",
+// ];
 
 app.use(
   cors({
     origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
+      // 1. Allow server-to-server requests (like Postman or internal scripts)
+      if (!origin) return callback(null, true);
+
+      // 2. Normalize the origin to lowercase to prevent matching bugs
+      const lowerOrigin = origin.toLowerCase();
+
+      // 3. Match localhost OR any vercel URL belonging to your project
+      const isLocal =
+        lowerOrigin.includes("localhost") || lowerOrigin.includes("127.0.0.1");
+      const isVercel = lowerOrigin.includes("vercel.app");
+
+      if (isLocal || isVercel) {
         callback(null, true);
       } else {
         callback(new Error(`Origin ${origin} not allowed by CORS`));
