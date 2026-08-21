@@ -205,9 +205,11 @@ export default function Navbar() {
           <div className="flex">
             <div className="shrink-0 flex items-center">
               {/* <span className="text-2xl font-bold bg-gradient-to-r from-indigo-600 via-purple-600 to-pink-600 bg-clip-text text-transparent bg-[size:200%_auto] hover:bg-[right_center] transition-all duration-500 cursor-pointer"> */}
-              <span className="text-transparent bg-size[200%_auto] hover:bg-position-[right_center] transition-all duration-500 cursor-pointer">
-                <img src={win2Logo} className=" size-7" alt="" />
-              </span>
+              <Link to="/" className="flex items-center">
+                <span className="text-transparent bg-size[200%_auto] hover:bg-position-[right_center] transition-all duration-500 cursor-pointer">
+                  <img src={win2Logo} className=" size-7" alt="" />
+                </span>
+              </Link>
             </div>
 
             {/* Desktop Navigation */}
