@@ -1,147 +1,196 @@
-# full_wsf_pract
+# WSF-AMS: Winners Satellite Fellowship Attendance Management System
 
-Professional summary, structure, and usage guide for the WSF practice application.
+[![Live Demo](https://img.shields.io/badge/Live-Demo-0A66C2?style=for-the-badge&logo=vercel)](https://wsf-ams.vercel.app)
+[![Backend API](https://img.shields.io/badge/API-Render-000000?style=for-the-badge&logo=render)](https://wsf-ams.onrender.com/api/health)
 
-## Project Overview
-
-`full_wsf_pract` is a full-stack demonstration app combining an Express/MongoDB backend with a React + Vite frontend. It provides attendance and member management features with role-based authentication (user / admin) and audit logging for administrative actions.
-
-Core capabilities
-
-- User authentication (JWT) with `admin` and `user` roles
-- Admin-only audit trail that records actions (create, update, delete, login)
-- CRUD for members and attendance marking and reporting
-- Simple admin UI guards on the frontend
-
-## High-level Architecture
-
-```mermaid
-flowchart TB
-  A[Frontend (Vite + React)] -->|API calls| B[Backend (Express API)]
-  B --> C[MongoDB]
-  B --> D[AuditLog Collection]
-  A -->|Uses| E[AuthContext (localStorage + token)]
-  subgraph Frontend
-    A
-    E
-  end
-  subgraph Backend
-    B
-    D
-    C
-  end
-```
-
-## Project Tree (key files)
-
-Root layout (truncated):
-
-```
-full_wsf_pract/
-├─ backend/
-│  ├─ server.js                # Express app, routes mounting, Mongo connection
-│  ├─ package.json
-│  ├─ controllers/
-│  │  ├─ authController.js     # login / register, JWT creation, audit logging
-│  │  ├─ auditController.js    # admin audit fetch
-│  │  └─ attendanceController.js
-│  ├─ models/
-│  │  ├─ User.js               # email, password (hashed), role
-│  │  └─ AuditLog.js
-│  ├─ routes/
-│  │  ├─ authRoutes.js         # /api/auth
-│  │  └─ auditRoutes.js        # /api/audit (verifyAdmin)
-│  ├─ middleware/
-│  │  └─ verifyToken.js        # verifyToken + verifyAdmin
-│  └─ utils/
-│     └─ auditLogger.js        # helper to write audit entries
-└─ frontend/
-   ├─ package.json
-   ├─ src/
-   │  ├─ api/apiClient.js      # fetch wrapper and service methods
-   │  ├─ contexts/AuthContext.jsx
-   │  ├─ components/
-   │  │  ├─ Header.jsx          # navigation + admin badge
-   │  │  └─ AdminRoute.jsx      # admin route guard
-   │  └─ pages/
-   │     ├─ Login.jsx
-   │     └─ ZonalAuditHistory.jsx
-```
-
-## Features & Actions
-
-- Authentication
-  - Register: `POST /api/auth/register` (first user can be initialized as admin)
-  - Login: `POST /api/auth/login` (returns `user` and `token`)
-- Authorization
-  - JWT stored in `wsf_token` and user object in `wsf_user` (localStorage)
-  - Backend middleware `verifyToken` and `verifyAdmin` protect sensitive routes
-- Audit logging
-  - `logAudit()` helper records actor, action, resource, details and IP
-  - Admins can fetch logs via `/api/audit`
-- Frontend
-  - `AdminRoute` wraps admin-only UI
-  - `Header` shows an `Admin` badge when signed-in user is admin
-
-## Quickstart (local development)
-
-Prerequisites
-
-- Node.js (>= 18 recommended)
-- MongoDB running locally (default: `mongodb://127.0.0.1:27017/wsf_pract`)
-
-Backend
-
-```powershell
-cd backend
-npm install
-cp .env.example .env      # edit if you need custom values
-npm run dev               # starts server via nodemon on port 5000
-```
-
-Frontend
-
-```powershell
-cd frontend
-npm install
-npm run dev               # starts Vite dev server (default 5173/5174)
-```
-
-Open the app at the Vite dev URL (e.g. http://localhost:5173) and the backend will be available at `http://localhost:5000/api`.
-
-## Test credentials
-
-You can use these seeded accounts for testing:
-
-- Admin: `admin@example.com` / `Admin@1234`
-- User: `user@example.com` / `User@1234`
-
-These accounts are created by the included `seed-users.mjs` script or were seeded during development.
-
-## Important Endpoints
-
-- `POST /api/auth/register` — register a new user
-- `POST /api/auth/login` — login and receive JWT
-- `GET /api/audit` — admin-only: list audit logs
-
-## Deployment notes
-
-- Ensure `JWT_SECRET` and `MONGO_URI` are set in production environment variables.
-- Configure `CLIENT_URL` to the real frontend host so CORS restricts origins.
-
-## Troubleshooting
-
-- If the frontend shows `Failed to fetch` on login:
-  1. Confirm backend is running: `http://localhost:5000/api/health`
-  2. Confirm `VITE_API_URL` (frontend) points to `http://localhost:5000/api` or leave default.
-  3. Verify CORS origins in `backend/server.js` match the Vite dev origin.
-
-## Next improvements (suggestions)
-
-- Show a dedicated admin dashboard or auto-redirect admins after login
-- Add role management UI for admin to promote/demote users
-- Add pagination and filtering for audit logs and export capability
+WSF-AMS is a full-stack attendance and member management platform built to streamline operations across districts, zones, and local cells. The system helps administrators manage member records, record attendance accurately, and monitor activity through an audit trail for better accountability and reporting.
 
 ---
 
-If you want, I can extend the README with more diagrams (sequence diagrams for login/audit flows) or add a short CONTRIBUTING section with development workflows and linting commands.
+- **Frontend (Vite + React):** [Deployed on Vercel](https://wsf-ams.vercel.app)
+- **Backend (Node.js + Express):** [Hosted on Render](https://wsf-ams.onrender.com)
+
+---
+
+## Core Features
+
+- Hierarchical management across provinces, zones, districts, and cells
+- Role-based access for admin and standard user accounts
+- Audit logging for key actions such as login, creation, updates, and deletions
+- Member registration and attendance tracking by date and cell
+- Reporting for attendance summaries and operational visibility
+- Clean and responsive dashboard experience for administrative workflows
+
+---
+
+## 🛠️ Local Development Setup
+
+### Prerequisites
+
+- Node.js (v18.0.0 or higher)
+- MongoDB Instance (Local Community Server or MongoDB Atlas cluster)
+
+### 1. Backend Installation
+
+```bash
+cd backend
+npm install
+cp .env.example .env     # Define your PORT, MONGO_URI, and JWT_SECRET
+npm run dev              # Starts development server via nodemon on Port 5000
+```
+
+### 2. Frontend Installation
+
+```bash
+cd frontend
+npm install
+npm run dev              # Launches Vite HMR server (usually localhost:5173)
+```
+
+---
+
+## 📡 Key API Routes
+
+### Authentication & Security
+
+- `POST /api/auth/register` — Provision a new profile.
+- `POST /api/auth/login` — Verifies credentials and yields a signed JWT.
+
+### Administrative Controls
+
+- `GET /api/audit` — Extracts system logging histories _(Requires valid Admin token)_.
+
+---
+
+## 🔒 Production Optimization & CORS Configurations
+
+To keep the application context secure, environmental layers are distributed across respective targets:
+
+- `MONGO_URI` and `JWT_SECRET` are injected directly via the Render Dashboard.
+- `CLIENT_URL` is set on the backend to enforce strict CORS access from the Vercel domain link exclusively.
+- `VITE_API_URL` is set inside Vercel's variables to communicate directly with the live Render instance API gateway.
+
+---
+
+## 📦 Tech Stack
+
+### Frontend
+
+- React 19
+- Vite
+- Tailwind CSS
+- React Router
+- Recharts
+- Jest + Testing Library
+
+### Backend
+
+- Node.js
+- Express.js
+- MongoDB with Mongoose
+- JWT authentication
+- bcryptjs
+- CORS
+- Nodemailer / Resend
+
+---
+
+## 🧩 Project Structure
+
+```text
+AttendanceMarkingSystem/
+├─ backend/
+│  ├─ app.js
+│  ├─ server.js
+│  ├─ package.json
+│  ├─ controllers/
+│  │  ├─ authController.js
+│  │  ├─ memberController.js
+│  │  ├─ attendanceController.js
+│  │  ├─ zoneController.js
+│  │  ├─ districtController.js
+│  │  ├─ cellController.js
+│  │  ├─ summaryController.js
+│  │  └─ auditController.js
+│  ├─ models/
+│  │  ├─ User.js
+│  │  ├─ Member.js
+│  │  ├─ Attendance.js
+│  │  ├─ Cell.js
+│  │  ├─ Zone.js
+│  │  ├─ District.js
+│  │  └─ AuditLog.js
+│  ├─ routes/
+│  │  ├─ authRoutes.js
+│  │  ├─ memberRoutes.js
+│  │  ├─ attendanceRoutes.js
+│  │  ├─ zoneRoutes.js
+│  │  ├─ districtRoutes.js
+│  │  ├─ cellRoutes.js
+│  │  ├─ summaryRoutes.js
+│  │  └─ auditRoutes.js
+│  ├─ middleware/
+│  │  └─ verifyToken.js
+│  ├─ utils/
+│  │  └─ auditLogger.js
+│  ├─ tests/
+│  └─ seed-users.mjs
+├─ src/
+│  ├─ App.jsx
+│  ├─ api/
+│  ├─ components/
+│  ├─ contexts/
+│  ├─ pages/
+│  └─ main.jsx
+├─ package.json
+├─ vite.config.js
+├─ .env.example
+├─ jest.config.js
+├─ README.md
+└─ public/
+```
+
+---
+
+## 🧪 Testing
+
+This project uses:
+
+- Jest and Supertest for backend API testing
+- Jest and React Testing Library for frontend UI testing
+
+Run the full test suite with:
+
+```bash
+npm test -- --runInBand
+```
+
+For backend-only tests:
+
+```bash
+cd backend
+npm test
+```
+
+---
+
+## Access Model
+
+The application is designed for role-based access control, where administrators manage user provisioning internally. Registration is intentionally restricted to maintain a controlled operational flow for staff and team management.
+
+---
+
+## 📌 Project Highlights
+
+- Secure role-based access
+- member and attendance management
+- zone, district, and cell organization
+- audit logs for accountability
+- responsive management dashboard
+- live deployment-ready architecture
+
+---
+
+## 📄 License
+
+This project is intended for portfolio and learning purposes unless otherwise specified by the owner.
