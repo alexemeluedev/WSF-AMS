@@ -1,4 +1,8 @@
-const API_BASE = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+// 1. Get the raw URL string from Vercel or your local fallback
+const RAW_URL = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+
+// 2. This safely ensures /api is always attached to the end for production
+export const API_BASE = RAW_URL.endsWith("/api") ? RAW_URL : `${RAW_URL}/api`;
 
 const getToken = () => localStorage.getItem("wsf_token");
 
