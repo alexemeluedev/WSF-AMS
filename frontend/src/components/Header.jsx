@@ -390,13 +390,13 @@ export default function Navbar() {
             ),
           )}
 
-          <Link
+          {/* <Link
             to="/login"
             className="border-l-4 border-transparent text-gray-600 active:bg-indigo-50 active:border-indigo-500 active:text-indigo-700 hover:bg-gray-50 hover:border-indigo-500 hover:text-gray-900 block pl-4 py-3 text-xl font-medium tracking-wide transition-all duration-200 select-none"
             onClick={() => setIsOpen(false)}
           >
             Log in
-          </Link>
+          </Link> */}
         </div>
 
         {/* Bottom CTA Block */}

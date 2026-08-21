@@ -776,7 +776,7 @@ const MonthlyReport = () => {
           )}
         </div>
 
-        {/* SMART MOBILE CARDS VIEW COMPONENT LAYER - HIDDEN ON DESKTOP PORTS */}
+        {/* SMART MOBILE CARDS VIEW COMPONENT LAYER - HIDDEN ON DESKTOP PORTS
         <div className="block md:hidden divide-y divide-slate-100 bg-slate-50/40">
           {paginatedData.length === 0 ? (
             <div className="py-12 text-center text-slate-400 text-xs italic">
@@ -855,88 +855,6 @@ const MonthlyReport = () => {
               );
             })
           )}
-        </div>
-
-        {/* BOX-STYLE FOOTER PAGINATION - FULLY RESPONSIVE */}
-        {/* <div className="p-4 bg-slate-50/50 border-t border-slate-100 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-medium text-slate-500">
-          <p className="text-center sm:text-left text-slate-500">
-            Showing{" "}
-            <span className="text-slate-800 font-bold font-mono">
-              {Math.min(startIndex + 1, filteredMatrix.length)}
-            </span>{" "}
-            to{" "}
-            <span className="text-slate-800 font-bold font-mono">
-              {Math.min(endIndex, filteredMatrix.length)}
-            </span>{" "}
-            of{" "}
-            <span className="text-slate-800 font-bold font-mono">
-              {filteredMatrix.length}
-            </span>{" "}
-            records
-          </p>
-
-          <div className="flex items-center gap-1.5">
-            <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
-              disabled={currentPage === 1}
-              className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-300 transition shadow-2xs cursor-pointer disabled:cursor-not-allowed"
-            >
-              <svg
-                xmlns="http://w3.org"
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M15 19l-7-7 7-7"
-                />
-              </svg>
-            </button>
-
-            {Array.from({ length: totalPages }).map((_, idx) => {
-              const pageNumber = idx + 1;
-              return (
-                <button
-                  key={pageNumber}
-                  onClick={() => setCurrentPage(pageNumber)}
-                  className={`w-8 h-8 text-[11px] font-bold rounded-lg border transition shadow-2xs cursor-pointer ${
-                    currentPage === pageNumber
-                      ? "bg-indigo-600 border-indigo-600 text-white shadow-xs"
-                      : "bg-white border-slate-200 text-slate-600 hover:bg-slate-50"
-                  }`}
-                >
-                  {pageNumber}
-                </button>
-              );
-            })}
-
-            <button
-              onClick={() =>
-                setCurrentPage((prev) => Math.min(prev + 1, totalPages))
-              }
-              disabled={currentPage === totalPages}
-              className="w-8 h-8 rounded-lg bg-white border border-slate-200 flex items-center justify-center text-slate-600 hover:bg-slate-50 disabled:bg-slate-50 disabled:text-slate-300 transition shadow-2xs cursor-pointer disabled:cursor-not-allowed"
-            >
-              <svg
-                xmlns="http://w3.org"
-                className="h-3.5 w-3.5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                strokeWidth={2.5}
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M9 5l7 7-7 7"
-                />
-              </svg>
-            </button>
-          </div>
         </div> */}
       </div>
 
