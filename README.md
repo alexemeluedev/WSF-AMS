@@ -2,195 +2,316 @@
 
 [![Live Demo](https://img.shields.io/badge/Live-Demo-0A66C2?style=for-the-badge&logo=vercel)](https://wsf-ams.vercel.app)
 [![Backend API](https://img.shields.io/badge/API-Render-000000?style=for-the-badge&logo=render)](https://wsf-ams.onrender.com/api/health)
+[![CI](https://img.shields.io/github/actions/workflow/status/alexemeluedev/WSF-AMS/ci.yml?branch=main&label=CI&logo=github)](https://github.com/alexemeluedev/WSF-AMS/actions)
 
-WSF-AMS is a full-stack attendance and member management platform built to streamline operations across districts, zones, and local cells. The system helps administrators manage member records, record attendance accurately, and monitor activity through an audit trail for better accountability and reporting.
+WSF-AMS is a full-stack attendance and member management platform built to
+streamline operations across zones, districts, and local cells. It provides
+tools for managing members, recording attendance, generating reports, managing
+administrative users, and maintaining audit records.
 
----
+## Overview
 
-- **Frontend (Vite + React):** [Deployed on Vercel](https://wsf-ams.vercel.app)
-- **Backend (Node.js + Express):** [Hosted on Render](https://wsf-ams.onrender.com)
-
----
+- **Frontend:** React and Vite, deployed on [Vercel](https://wsf-ams.vercel.app)
+- **Backend:** Node.js and Express, hosted on [Render](https://wsf-ams.onrender.com)
+- **Database:** MongoDB Atlas
+- **Source control:** GitHub
+- **CI/CD:** GitHub Actions
 
 ## Core Features
 
-- Hierarchical management across provinces, zones, districts, and cells
-- Role-based access for admin and standard user accounts
-- Audit logging for key actions such as login, creation, updates, and deletions
-- Member registration and attendance tracking by date and cell
-- Reporting for attendance summaries and operational visibility
-- Clean and responsive dashboard experience for administrative workflows
+- Hierarchical management across zones, districts, and cells
+- Role-based access for administrator and standard user accounts
+- Member registration and management
+- Attendance registration by date and cell
+- Attendance history and summaries
+- Monthly and zonal reporting
+- Zonal audit history
+- Member reclassification
+- Administrative user management
+- Audit logging for important system actions
+- Attendance statistics and turnout calculations
+- Automated attendance summary email dispatch
+- Responsive administrative dashboard
 
----
-
-## 🛠️ Local Development Setup
+## Local Development Setup
 
 ### Prerequisites
 
-- Node.js (v18.0.0 or higher)
-- MongoDB Instance (Local Community Server or MongoDB Atlas cluster)
+- Node.js 18 or higher
+- A MongoDB instance or MongoDB Atlas cluster
+- Git
 
-### 1. Backend Installation
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/alexemeluedev/WSF-AMS.git
+cd WSF-AMS
+```
+
+### 2. Install and run the backend
 
 ```bash
 cd backend
 npm install
-cp .env.example .env     # Define your PORT, MONGO_URI, and JWT_SECRET
-npm run dev              # Starts development server via nodemon on Port 5000
+npm run dev
 ```
 
-### 2. Frontend Installation
+Configure the backend environment variables before starting the server:
+
+```env
+JWT_SECRET=your_secure_secret
+MONGO_URI=your_mongodb_connection_string
+CLIENT_URL=http://localhost:5173
+```
+
+The backend runs on the configured local API port.
+
+### 3. Install and run the frontend
+
+Open another terminal, then run:
 
 ```bash
 cd frontend
 npm install
-npm run dev              # Launches Vite HMR server (usually localhost:5173)
+npm run dev
 ```
 
----
+The Vite development server normally runs at `http://localhost:5173`.
+Configure the frontend API URL with
+`VITE_API_URL=http://localhost:5000/api`.
 
-## 📡 Key API Routes
+## Key API Routes
 
-### Authentication & Security
+### Authentication
 
-- `POST /api/auth/register` — Provision a new profile.
-- `POST /api/auth/login` — Verifies credentials and yields a signed JWT.
+- `POST /api/auth/login`: Authenticates a user and returns a JWT.
+- `POST /api/auth/register`: Creates an administrative or user profile where permitted.
 
-### Administrative Controls
+### Attendance
 
-- `GET /api/audit` — Extracts system logging histories _(Requires valid Admin token)_.
+Attendance routes provide operations for recording, retrieving, updating, and
+summarizing attendance data.
 
----
+### Administrative controls
 
-## 🔒 Production Optimization & CORS Configurations
+- `GET /api/audit`: Retrieves audit history for authorized users.
 
-To keep the application context secure, environmental layers are distributed across respective targets:
+The backend also contains routes for members, zones, districts, cells,
+attendance summaries, and other administrative operations.
 
-- `MONGO_URI` and `JWT_SECRET` are injected directly via the Render Dashboard.
-- `CLIENT_URL` is set on the backend to enforce strict CORS access from the Vercel domain link exclusively.
-- `VITE_API_URL` is set inside Vercel's variables to communicate directly with the live Render instance API gateway.
+## Production Configuration
 
----
+Production environment variables are configured separately from the source code:
 
-## 📦 Tech Stack
+- `MONGO_URI`: MongoDB Atlas connection
+- `JWT_SECRET`: JWT signing secret
+- `CLIENT_URL`: Allowed frontend origin for CORS
+- `VITE_API_URL`: Production backend API URL
 
-### Frontend
+Production secrets are configured through the respective deployment platforms
+and are not committed to the repository.
 
-- React 19
+## Tech Stack
+
+### Frontend stack
+
+- React
 - Vite
 - Tailwind CSS
 - React Router
-- Recharts
-- Jest + Testing Library
+- Jest
+- React Testing Library
+- Babel
 
-### Backend
+### Backend stack
 
 - Node.js
 - Express.js
-- MongoDB with Mongoose
+- MongoDB and Mongoose
 - JWT authentication
 - bcryptjs
 - CORS
-- Nodemailer / Resend
+- Jest and Supertest
+- MongoDB Memory Server
 
----
+### Deployment and CI
 
-## 🧩 Project Structure
+- GitHub and GitHub Actions
+- Vercel
+- Render
+- MongoDB Atlas
+
+## Project Structure
 
 ```text
-AttendanceMarkingSystem/
-├─ backend/
-│  ├─ app.js
-│  ├─ server.js
-│  ├─ package.json
-│  ├─ controllers/
-│  │  ├─ authController.js
-│  │  ├─ memberController.js
-│  │  ├─ attendanceController.js
-│  │  ├─ zoneController.js
-│  │  ├─ districtController.js
-│  │  ├─ cellController.js
-│  │  ├─ summaryController.js
-│  │  └─ auditController.js
-│  ├─ models/
-│  │  ├─ User.js
-│  │  ├─ Member.js
-│  │  ├─ Attendance.js
-│  │  ├─ Cell.js
-│  │  ├─ Zone.js
-│  │  ├─ District.js
-│  │  └─ AuditLog.js
-│  ├─ routes/
-│  │  ├─ authRoutes.js
-│  │  ├─ memberRoutes.js
-│  │  ├─ attendanceRoutes.js
-│  │  ├─ zoneRoutes.js
-│  │  ├─ districtRoutes.js
-│  │  ├─ cellRoutes.js
-│  │  ├─ summaryRoutes.js
-│  │  └─ auditRoutes.js
-│  ├─ middleware/
-│  │  └─ verifyToken.js
-│  ├─ utils/
-│  │  └─ auditLogger.js
-│  ├─ tests/
-│  └─ seed-users.mjs
-├─ src/
-│  ├─ App.jsx
-│  ├─ api/
-│  ├─ components/
-│  ├─ contexts/
-│  ├─ pages/
-│  └─ main.jsx
-├─ package.json
-├─ vite.config.js
-├─ .env.example
-├─ jest.config.js
-├─ README.md
-└─ public/
+WSF-AMS/
+├── backend/
+│   ├── config/
+│   │   └── env.js
+│   ├── controllers/
+│   │   ├── authController.js
+│   │   ├── attendanceController.js
+│   │   ├── auditController.js
+│   │   ├── districtController.js
+│   │   ├── memberController.js
+│   │   └── zoneController.js
+│   ├── middleware/
+│   │   └── verifyToken.js
+│   ├── models/
+│   │   ├── Attendance.js
+│   │   ├── AuditLog.js
+│   │   ├── Cell.js
+│   │   ├── District.js
+│   │   ├── Member.js
+│   │   ├── User.js
+│   │   └── Zone.js
+│   ├── routes/
+│   │   ├── attendanceRoutes.js
+│   │   ├── auditRoutes.js
+│   │   ├── authRoutes.js
+│   │   ├── districtRoutes.js
+│   │   ├── memberRoutes.js
+│   │   ├── summaryRoutes.js
+│   │   └── zoneRoutes.js
+│   ├── tests/
+│   └── server.js
+├── frontend/
+│   ├── public/
+│   ├── src/
+│   │   ├── api/
+│   │   ├── assets/
+│   │   ├── components/
+│   │   ├── contexts/
+│   │   ├── pages/
+│   │   └── utils/
+│   ├── tests/
+│   ├── jest.config.js
+│   ├── jest.setup.js
+│   ├── vite.config.js
+│   └── package.json
+├── package.json
+└── README.md
 ```
 
----
+## Testing
 
-## 🧪 Testing
+The project uses separate test suites for the frontend and backend.
 
-This project uses:
+### Frontend
 
-- Jest and Supertest for backend API testing
-- Jest and React Testing Library for frontend UI testing
-
-Run the full test suite with:
+Frontend tests use Jest and React Testing Library.
 
 ```bash
+cd frontend
 npm test -- --runInBand
 ```
 
-For backend-only tests:
+Current result: 15 test suites passed and 87 tests passed.
+
+### Backend
+
+Backend API tests use Jest, Supertest, and MongoDB Memory Server.
 
 ```bash
 cd backend
-npm test
+npm test -- --runInBand
 ```
 
----
+Current result: 8 test suites passed and 137 tests passed.
+
+### Test summary
+
+| Area      | Suites |   Tests |
+| --------- | -----: | ------: |
+| Frontend  |     15 |      87 |
+| Backend   |      8 |     137 |
+| **Total** | **23** | **224** |
+
+All current tests are passing.
+
+## Continuous Integration
+
+GitHub Actions runs automated checks when changes are pushed to GitHub. Passing
+checks can trigger deployments to Vercel for the frontend and Render for the
+backend.
+
+```text
+Code changes
+    |
+    v
+GitHub
+    |
+    v
+GitHub Actions
+    |
+    +--> Tests and checks
+    |
+    v
+  Passed
+    |
+    +--> Vercel: frontend deployment
+    |
+    +--> Render: backend deployment
+```
+
+## Production Deployment
+
+### Deployed frontend
+
+The React/Vite frontend is deployed on
+[Vercel](https://wsf-ams.vercel.app).
+
+### Deployed backend
+
+The Node.js/Express API is deployed on
+[Render](https://wsf-ams.onrender.com).
+
+### Database
+
+Production application data is stored in MongoDB Atlas.
+
+### Backend health check
+
+The backend exposes `GET /api/health`. The production health endpoint is
+[wsf-ams.onrender.com/api/health](https://wsf-ams.onrender.com/api/health).
+A successful response confirms that the backend API is running.
 
 ## Access Model
 
-The application is designed for role-based access control, where administrators manage user provisioning internally. Registration is intentionally restricted to maintain a controlled operational flow for staff and team management.
+The application uses role-based access control. Administrative users can
+manage system users and organizational data, while standard users are
+restricted to the operations permitted by their assigned role.
 
----
+User registration is controlled rather than exposed as an unrestricted public
+registration process.
 
-## 📌 Project Highlights
+## Security
 
-- Secure role-based access
-- member and attendance management
-- zone, district, and cell organization
-- audit logs for accountability
-- responsive management dashboard
-- live deployment-ready architecture
+The application uses JWT-based authentication for protected API operations.
+Security-related configuration, including JWT secrets, MongoDB credentials,
+production API configuration, and other private credentials, is provided
+through environment variables and should not be committed to the repository.
 
----
+The backend also uses CORS configuration to control which frontend origins are
+permitted to communicate with the API.
 
-## 📄 License
+## Project Highlights
 
-This project is intended for portfolio and learning purposes unless otherwise specified by the owner.
+- Full-stack React and Node.js application
+- MongoDB Atlas production database
+- JWT authentication and role-based access
+- Zone, district, cell, and member management
+- Attendance registration and history
+- Monthly and zonal reporting
+- Audit logging
+- Automated attendance summary dispatch
+- Separate frontend and backend test suites
+- 224 automated tests currently passing
+- GitHub Actions CI
+- Vercel frontend deployment
+- Render backend deployment
+
+## License
+
+This project is intended for portfolio and learning purposes unless otherwise
+specified by the owner.
