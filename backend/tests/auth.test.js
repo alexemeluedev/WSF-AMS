@@ -303,10 +303,7 @@ describe("Auth API", () => {
     expect(response.body.token).toBeDefined();
 
     // Verify the JWT returned by the login endpoint
-    const decoded = jwt.verify(
-      response.body.token,
-      process.env.JWT_SECRET || "supersecretkey",
-    );
+    const decoded = jwt.verify(response.body.token, process.env.JWT_SECRET);
 
     expect(decoded.id).toBe(user._id.toString());
     expect(decoded.email).toBe("loginuser@example.com");

@@ -1,4 +1,3 @@
-// finallised code
 import React, { useState, useRef, useEffect } from "react";
 import { useStats } from "../contexts/StatsContext.jsx";
 import { useLocation } from "react-router-dom";

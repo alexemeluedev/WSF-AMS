@@ -10,7 +10,7 @@ export default function ZoneManager() {
   const [zones, setZones] = useState([]);
   const [districtsList, setDistrictsList] = useState([]);
 
-  // 1. ADD PAGINATION STATE REGISTRIES
+  //  ADD PAGINATION STATE REGISTRIES
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [totalItems, setTotalItems] = useState(0);
@@ -21,7 +21,6 @@ export default function ZoneManager() {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [editingZone, setEditingZone] = useState(null);
   const [zoneToDelete, setZoneToDelete] = useState(null);
-  // const [formInput, setFormInput] = useState({ name: "", headquarters: "" });
   const [formInput, setFormInput] = useState({
     name: "",
     headquarters: "",
@@ -33,7 +32,7 @@ export default function ZoneManager() {
   const [isDeleting, setIsDeleting] = useState(false);
   const [validationError, setValidationError] = useState("");
 
-  // 3. FETCH LIVE DISTRICT RECORDS ON WINDOW MOUNT LOAD
+  // FETCH LIVE DISTRICT RECORDS ON WINDOW MOUNT LOAD
   useEffect(() => {
     const fetchDistricts = async () => {
       try {
@@ -179,7 +178,6 @@ export default function ZoneManager() {
             No zone elements found matching active filters.
           </div>
         ) : (
-          // <div className="overflow-visible">
           <>
             <div className="overflow-x-auto w-full">
               <table className="w-full text-left border-collapse">

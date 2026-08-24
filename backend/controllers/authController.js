@@ -3,10 +3,16 @@ import jwt from "jsonwebtoken";
 import User from "../models/User.js";
 import { logAudit } from "../utils/auditLogger.js";
 
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not configured.");
+}
+
 const createToken = (user) => {
   return jwt.sign(
     { id: user._id, email: user.email, role: user.role },
-    process.env.JWT_SECRET || "supersecretkey",
+    JWT_SECRET,
     { expiresIn: "8h" },
   );
 };
@@ -17,7 +23,7 @@ const decodeAuthToken = (req) => {
 
   const token = authHeader.split(" ")[1];
   try {
-    return jwt.verify(token, process.env.JWT_SECRET || "supersecretkey");
+    return jwt.verify(token, JWT_SECRET);
   } catch {
     return null;
   }

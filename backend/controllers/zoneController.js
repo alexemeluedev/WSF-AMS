@@ -140,7 +140,8 @@ export const updateZone = async (req, res) => {
     const updatedZone = await Zone.findByIdAndUpdate(
       id,
       { name: name.trim(), headquarters: headquarters.trim(), district },
-      { new: true, runValidators: true },
+      // { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     );
 
     if (!updatedZone) {

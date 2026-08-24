@@ -1,7 +1,5 @@
-// npm test -- --runInBand tests/AttendanceHistory.test.jsx
 import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-// import { attendanceService } from "../api/apiclient";
 import { attendanceService } from "../api/apiClient";
 
 const AttendanceHistory = () => {

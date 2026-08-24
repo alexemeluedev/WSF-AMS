@@ -305,7 +305,7 @@ export default function DistrictManager() {
                       <td className="py-4 px-4 text-slate-400 font-mono text-xs">
                         {d.dateCreated}
                       </td>
-                      {/* <td className="py-4 px-4 text-right relative overflow-visible w-28 whitespace-nowrap"> */}
+
                       <td className="py-4 px-4 text-right relative w-24 whitespace-nowrap">
                         <button
                           type="button"
@@ -399,14 +399,6 @@ export default function DistrictManager() {
           <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 border-t border-slate-100 bg-slate-50/50">
             <div className="flex items-center gap-4 text-xs font-medium text-slate-500">
               <span>
-                {/* Showing{" "}
-                <strong className="text-slate-800">
-                  {paginatedDistricts.length}
-                </strong>{" "}
-                of{" "}
-                <strong className="text-slate-800">
-                  {filteredDistricts.length}
-                </strong>{" "} */}
                 Showing {startRecord} – {endRecord} of{" "}
                 {filteredDistricts.length} total records
               </span>

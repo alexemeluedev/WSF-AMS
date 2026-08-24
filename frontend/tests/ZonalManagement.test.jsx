@@ -3,7 +3,11 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { useAuth } from "../src/contexts/AuthContext.jsx";
 import ZonalManagement from "../src/pages/ZonalManagement.jsx";
-import { authService, statsService } from "../src/api/apiClient";
+import {
+  authService,
+  statsService,
+  attendanceService,
+} from "../src/api/apiClient";
 
 jest.mock("../src/api/apiClient", () => ({
   authService: {
@@ -12,7 +16,10 @@ jest.mock("../src/api/apiClient", () => ({
   statsService: {
     getSummary: jest.fn(),
   },
-  attendanceService: {},
+  attendanceService: {
+    summary: jest.fn(),
+    dispatchEmailReport: jest.fn(),
+  },
 }));
 
 jest.mock("../src/contexts/AuthContext.jsx", () => ({
@@ -183,30 +190,24 @@ describe("ZonalManagement", () => {
     ).toBeInTheDocument();
   });
   test("dispatches the attendance summary email", async () => {
-    global.fetch = jest
-      .fn()
-      // First fetch: attendance summary
-      .mockResolvedValueOnce({
-        json: jest.fn().mockResolvedValue({
-          summaries: [
-            {
-              cellName: "Cell Alpha",
-              totalPresent: 20,
-              totalAbsent: 5,
-            },
-            {
-              cellName: "Cell Beta",
-              totalPresent: 15,
-              totalAbsent: 10,
-            },
-          ],
-        }),
-      })
-      // Second fetch: dispatch report
-      .mockResolvedValueOnce({
-        ok: true,
-        json: jest.fn().mockResolvedValue({}),
-      });
+    attendanceService.summary.mockResolvedValue({
+      summaries: [
+        {
+          cellName: "Cell Alpha",
+          totalPresent: 20,
+          totalAbsent: 5,
+        },
+        {
+          cellName: "Cell Beta",
+          totalPresent: 15,
+          totalAbsent: 10,
+        },
+      ],
+    });
+
+    attendanceService.dispatchEmailReport.mockResolvedValue({
+      message: "Report dispatched successfully",
+    });
 
     const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => {});
 
@@ -215,7 +216,6 @@ describe("ZonalManagement", () => {
 
     render(<ZonalManagement />);
 
-    // Open email compiler
     await userEvent.click(
       screen.getByRole("button", {
         name: /email dispatch compiler/i,
@@ -236,35 +236,11 @@ describe("ZonalManagement", () => {
     );
 
     await waitFor(() => {
-      expect(global.fetch).toHaveBeenCalledTimes(2);
+      expect(attendanceService.summary).toHaveBeenCalledTimes(1);
+      expect(attendanceService.dispatchEmailReport).toHaveBeenCalledTimes(1);
     });
 
-    // Verify summary request
-    expect(global.fetch).toHaveBeenNthCalledWith(
-      1,
-      "http://localhost:5000/api/attendance/summary",
-      expect.objectContaining({
-        method: "GET",
-        headers: expect.objectContaining({
-          Authorization: "Bearer test-token",
-        }),
-      }),
-    );
-
-    // Verify dispatch request
-    const dispatchCall = global.fetch.mock.calls[1];
-
-    expect(dispatchCall[0]).toBe(
-      "http://localhost:5000/api/attendance/dispatch-report",
-    );
-
-    const dispatchOptions = dispatchCall[1];
-
-    expect(dispatchOptions.method).toBe("POST");
-
-    expect(dispatchOptions.headers.Authorization).toBe("Bearer test-token");
-
-    const dispatchBody = JSON.parse(dispatchOptions.body);
+    const dispatchBody = attendanceService.dispatchEmailReport.mock.calls[0][0];
 
     expect(dispatchBody).toEqual(
       expect.objectContaining({
@@ -280,6 +256,8 @@ describe("ZonalManagement", () => {
 
     expect(dispatchBody.tableRows).toContain("Cell Alpha");
     expect(dispatchBody.tableRows).toContain("Cell Beta");
+
+    console.log("ALERT CALLS:", alertSpy.mock.calls);
 
     expect(alertSpy).toHaveBeenCalledWith(
       expect.stringContaining("Automated digest data compiled successfully"),

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { attendanceService } from "../api/apiclient"; // Adjust path to your apiclient file
-import { attendanceService } from "../api/apiClient"; // Adjust path to your apiclient file
+import { attendanceService } from "../api/apiClient";
 
 const MonthlyReport = () => {
   // Configurable search/filter metrics
@@ -540,22 +539,14 @@ const MonthlyReport = () => {
 
                                 try {
                                   setLoading(true);
-                                  const activeToken =
-                                    localStorage.getItem("wsf_token") || "";
+                                  // const activeToken =
+                                  //   localStorage.getItem("wsf_token") || "";
 
                                   // 🔑 THE FIX: Absolute URL string routing forces the network tab to bypass local file caching
-                                  const response = await fetch(
-                                    `http://localhost:5000/api/attendance/${row.id}`,
-                                    {
-                                      method: "DELETE",
-                                      headers: {
-                                        "Content-Type": "application/json",
-                                        Authorization: activeToken
-                                          ? `Bearer ${activeToken}`
-                                          : "",
-                                      },
-                                    },
-                                  );
+                                  const response =
+                                    await attendanceService.removeMember(
+                                      row.id,
+                                    );
 
                                   if (response.ok) {
                                     // Sync frontend view rows state immediately on success
@@ -775,87 +766,6 @@ const MonthlyReport = () => {
             </>
           )}
         </div>
-
-        {/* SMART MOBILE CARDS VIEW COMPONENT LAYER - HIDDEN ON DESKTOP PORTS
-        <div className="block md:hidden divide-y divide-slate-100 bg-slate-50/40">
-          {paginatedData.length === 0 ? (
-            <div className="py-12 text-center text-slate-400 text-xs italic">
-              No matching records found
-            </div>
-          ) : (
-            paginatedData.map((row) => {
-              const isVoid = row.total === 0;
-              return (
-                <div
-                  key={row.id}
-                  className={`p-4 space-y-3 transition-colors ${isVoid ? "bg-amber-50/15" : "bg-white"}`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="text-xs font-bold text-slate-900 uppercase tracking-tight">
-                      {row.name}
-                    </span>
-                    <span
-                      className={`px-2 py-0.5 text-[10px] font-bold rounded-full font-mono ${isVoid ? "bg-slate-100 text-slate-400" : "bg-indigo-50 text-indigo-700"}`}
-                    >
-                      {row.total} Total
-                    </span>
-                  </div>
-                  <div className="grid grid-cols-3 gap-2 border border-slate-100 rounded-xl p-2 bg-slate-50/50 text-center text-[11px] font-medium text-slate-500">
-                    <div>
-                      <span className="block text-[9px] font-bold text-slate-400 uppercase">
-                        Men
-                      </span>
-                      <span className="font-mono font-bold text-slate-700">
-                        {row.male}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="block text-[9px] font-bold text-slate-400 uppercase">
-                        Women
-                      </span>
-                      <span className="font-mono font-bold text-slate-700">
-                        {row.female}
-                      </span>
-                    </div>
-                    <div>
-                      <span className="block text-[9px] font-bold text-slate-400 uppercase">
-                        Kids
-                      </span>
-                      <span className="font-mono font-bold text-slate-700">
-                        {row.children}
-                      </span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between pt-1">
-                    <span className="text-[10px] text-slate-400 font-medium">
-                      {row.date}
-                    </span>
-                    <button
-                      onClick={() => setSelectedRowData(row)}
-                      className="px-3 py-1.5 bg-white border border-slate-200 rounded-lg text-[10px] font-bold text-slate-700 shadow-2xs flex items-center gap-1 cursor-pointer"
-                    >
-                      <span>Details</span>
-                      <svg
-                        xmlns="http://w3.org"
-                        className="h-2.5 w-2.5 text-slate-400"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M9 5l7 7-7 7"
-                        />
-                      </svg>
-                    </button>
-                  </div>
-                </div>
-              );
-            })
-          )}
-        </div> */}
       </div>
 
       {/* INLINE DESIGN REPLACEMENT: RE-ENGINEERED MARKED INFO MODAL OVERLAY       */}
@@ -962,35 +872,6 @@ const MonthlyReport = () => {
                   </button>
                 </div>
 
-                {/* <form
-                  id="drawer-log-form"
-                  className="space-y-4"
-                  onSubmit={(e) => {
-                    e.preventDefault();
-                    const data = new FormData(e.target);
-                    const nameVal = data.get("cell_name")?.toUpperCase();
-                    const mVal = Number(data.get("male_count") || 0);
-                    const fVal = Number(data.get("female_count") || 0);
-                    const cVal = Number(data.get("child_count") || 0);
-
-                    if (!nameVal) return;
-
-                    handleAddNewRow({
-                      id: Math.random().toString(36).substr(2, 9),
-                      name: nameVal,
-                      male: mVal,
-                      female: fVal,
-                      children: cVal,
-                      total: mVal + fVal + cVal,
-                      date: new Date().toLocaleDateString("en-GB", {
-                        day: "2-digit",
-                        month: "long",
-                        year: "numeric",
-                      }),
-                    });
-                    setIsDrawerOpen(false);
-                  }}
-                > */}
                 <form
                   id="drawer-log-form"
                   className="space-y-4"
@@ -1112,10 +993,6 @@ const MonthlyReport = () => {
                         setReportMatrixData(formattedMatrix);
                         setIsDrawerOpen(false);
 
-                        // setToastMessage({
-                        //   text: `📁 Attendance summary for ${nameVal} logged to database successfully!`,
-                        //   type: "success",
-                        // });
                         if (typeof setToastMessage !== "undefined") {
                           setToastMessage({
                             text: `📁 Attendance summary for ${nameVal} logged to database successfully!`,
@@ -1129,10 +1006,7 @@ const MonthlyReport = () => {
                       }
                     } catch (err) {
                       console.error("Manual log drawer submission crash:", err);
-                      // setToastMessage({
-                      //   text: "Failed to log manual entry. Check if sheet already exists for this date.",
-                      //   type: "error",
-                      // });
+
                       if (typeof setToastMessage !== "undefined") {
                         setToastMessage({
                           text: "Failed to log manual entry. Check if sheet already exists for this date.",

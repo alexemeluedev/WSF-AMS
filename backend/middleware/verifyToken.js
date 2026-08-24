@@ -1,4 +1,9 @@
 import jwt from "jsonwebtoken";
+const JWT_SECRET = process.env.JWT_SECRET;
+
+if (!JWT_SECRET) {
+  throw new Error("JWT_SECRET is not configured.");
+}
 
 export const verifyToken = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -10,7 +15,7 @@ export const verifyToken = (req, res, next) => {
   try {
     const payload = jwt.verify(
       token,
-      process.env.JWT_SECRET || "supersecretkey",
+      JWT_SECRET,
     );
     req.user = payload;
     next();

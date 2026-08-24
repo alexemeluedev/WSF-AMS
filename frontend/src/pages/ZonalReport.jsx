@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
-// import { attendanceService, cellService } from "../api/apiclient"; // Adjust path to your apiclient file
-import { attendanceService, cellService } from "../api/apiClient"; // Adjust path to your apiclient file
+import { attendanceService, cellService } from "../api/apiClient";
 // Incorporating standard responsive chart nodes
 import {
   ComposedChart,

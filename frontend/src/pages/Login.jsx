@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import winLogo from "../assets/w1.png";
-import toast from "react-hot-toast"; // 1. IMPORT THE TOAST TOOL
+import toast from "react-hot-toast"; //  IMPORT THE TOAST TOOL
 
 export default function LoginPage() {
   const { user, login, loading, error } = useAuth();

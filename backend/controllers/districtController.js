@@ -102,7 +102,8 @@ export const updateDistrict = async (req, res) => {
         name: req.body.name.trim(),
         code: req.body.code.trim().toUpperCase(),
       },
-      { new: true, runValidators: true },
+      // { new: true, runValidators: true },
+      { returnDocument: "after", runValidators: true },
     );
 
     if (!updated) {

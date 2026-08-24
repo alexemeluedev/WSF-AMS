@@ -1,11 +1,10 @@
-import React, { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
 import { useStats } from "../contexts/StatsContext.jsx";
 import { CustomTable } from "../components/CustomTable";
 import { Toast } from "../components/Toast";
 import { StatusBadge } from "../components/StatusBadge";
 import { MemberModal } from "../components/MemberModal.jsx";
-import { ConfirmationDialog } from "../components/ConfirmationDialog";
 import { memberService } from "../api/apiClient.js";
 
 const Home = () => {

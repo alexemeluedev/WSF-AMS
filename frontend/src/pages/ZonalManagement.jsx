@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "../contexts/AuthContext.jsx";
-// import { authService, statsService, attendanceService } from "../api/apiclient";
 import { authService, statsService, attendanceService } from "../api/apiClient";
 
 const ZonalManagement = () => {
@@ -129,25 +128,18 @@ const ZonalManagement = () => {
     try {
       setIsSending(true);
 
-      const activeToken = localStorage.getItem("wsf_token") || "";
+      // const activeToken = localStorage.getItem("wsf_token") || "";
       const activeSelectedWorkspaceDate =
         localStorage.getItem("cell_date") ||
-        new Date().toISOString().split("T");
+        // new Date().toISOString().split("T");
+        new Date().toISOString().split("T")[0];
 
       // 1. 🔑 THE ISOLATED HANDSHAKE FIX: Fetch a fresh, accurate copy of your summary statistics directly from MongoDB!
       // This removes all external cross-component array dependency crashes.
-      const responseSummary = await fetch(
-        "http://localhost:5000/api/attendance/summary",
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: activeToken ? `Bearer ${activeToken}` : "",
-          },
-        },
-      );
 
-      const summaryData = await responseSummary.json().catch(() => ({}));
+      const responseSummary = await attendanceService.summary();
+      // const summaryData = await responseSummary.json().catch(() => ({}));
+      const summaryData = responseSummary || {};
       const rawSummaries =
         summaryData?.summaries || summaryData?.data?.summaries || [];
 
@@ -186,31 +178,14 @@ const ZonalManagement = () => {
           : 100;
 
       // 3. DISPATCH THE AUTHENTIC COMPUTED METRICS DIRECTLY OVER THE NATIVE FETCH TUBE
-      const response = await fetch(
-        "http://localhost:5000/api/attendance/dispatch-report",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: activeToken ? `Bearer ${activeToken}` : "",
-          },
-          body: JSON.stringify({
-            destination: emailInput,
-            targetDate: activeSelectedWorkspaceDate,
-            present: totalPresentCount,
-            absent: totalAbsentCount,
-            rate: globalTurnoutRate,
-            tableRows: rowsHtmlPayload,
-          }),
-        },
-      );
-
-      if (!response.ok) {
-        const errorBody = await response.json().catch(() => ({}));
-        throw new Error(
-          errorBody?.message || "Server rejected report compiler handshake.",
-        );
-      }
+      await attendanceService.dispatchEmailReport({
+        destination: emailInput,
+        targetDate: activeSelectedWorkspaceDate,
+        present: totalPresentCount,
+        absent: totalAbsentCount,
+        rate: globalTurnoutRate,
+        tableRows: rowsHtmlPayload,
+      });
 
       alert(
         `📧 Automated digest data compiled successfully and dispatched onto: ${emailInput}`,
@@ -365,17 +340,6 @@ const ZonalManagement = () => {
 
               <form onSubmit={handleSendEmailReport} className="space-y-4 pt-2">
                 <div className="flex flex-col space-y-1.5">
-                  {/* <label className="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
-                    Destination Headquarters Email Address
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={emailInput}
-                    onChange={(e) => setEmailInput(e.target.value)}
-                    placeholder="e.g. zonalhq@winnerschapel.org"
-                    className="w-full bg-slate-50 border border-slate-200 dark:bg-slate-800 dark:border-slate-700 text-xs font-semibold text-slate-700 dark:text-slate-200 rounded-xl px-4 py-2.5 outline-none focus:border-indigo-500 focus:bg-white dark:focus:bg-slate-900 transition"
-                  /> */}
                   <label
                     htmlFor="destination-email"
                     className="text-[10px] font-bold text-slate-400 uppercase tracking-wider"
