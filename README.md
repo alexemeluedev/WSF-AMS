@@ -1,145 +1,298 @@
-# WSF-AMS: Winners Satellite Fellowship Attendance Management System
+# WSF-AMS — Attendance & Member Management System
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-0A66C2?style=for-the-badge&logo=vercel)](https://wsf-ams.vercel.app)
-[![Backend API](https://img.shields.io/badge/API-Render-000000?style=for-the-badge&logo=render)](https://wsf-ams.onrender.com/api/health)
-[![CI](https://img.shields.io/github/actions/workflow/status/alexemeluedev/WSF-AMS/ci.yml?branch=main&label=CI&logo=github)](https://github.com/alexemeluedev/WSF-AMS/actions)
+[![Live Demo](https://img.shields.io/badge/Live-Demo-0A66C2?style=for-the-badge\&logo=vercel)](https://wsf-ams.vercel.app)
+[![Backend API](https://img.shields.io/badge/API-Render-000000?style=for-the-badge\&logo=render)](https://wsf-ams.onrender.com/api/health)
+[![CI](https://img.shields.io/github/actions/workflow/status/alexemeluedev/WSF-AMS/ci.yml?branch=main\&label=CI\&logo=github)](https://github.com/alexemeluedev/WSF-AMS/actions)
 
-WSF-AMS is a full-stack attendance and member management platform built to
-streamline operations across zones, districts, and local cells. It provides
-tools for managing members, recording attendance, generating reports, managing
-administrative users, and maintaining audit records.
+**WSF-AMS (Winners Satellite Fellowship Attendance Management System)** is a full-stack web application designed to manage attendance, members, and organizational administration across **zones, districts, and cells**.
 
-## Overview
+The project was built as a complete business application rather than a simple CRUD system. It includes authentication and authorization, structured organizational data, attendance workflows, reporting, audit logging, automated email communication, automated testing, CI, and cloud deployment.
 
-- **Frontend:** React and Vite, deployed on [Vercel](https://wsf-ams.vercel.app)
-- **Backend:** Node.js and Express, hosted on [Render](https://wsf-ams.onrender.com)
-- **Database:** MongoDB Atlas
-- **Source control:** GitHub
-- **CI/CD:** GitHub Actions
+## Live Application
 
-## Core Features
+**Frontend:**
+https://wsf-ams.vercel.app
 
-- Hierarchical management across zones, districts, and cells
-- Role-based access for administrator and standard user accounts
-- Member registration and management
-- Attendance registration by date and cell
-- Attendance history and summaries
-- Monthly and zonal reporting
-- Zonal audit history
-- Member reclassification
-- Administrative user management
-- Audit logging for important system actions
-- Attendance statistics and turnout calculations
-- Automated attendance summary email dispatch
-- Responsive administrative dashboard
+**Backend API:**
+https://wsf-ams.onrender.com/api/health
 
-## Local Development Setup
+The production system uses a React/Vite frontend hosted on Vercel, a Node.js/Express API hosted on Render, and MongoDB Atlas for persistent data storage.
 
-### Prerequisites
+---
 
-- Node.js 18 or higher
-- A MongoDB instance or MongoDB Atlas cluster
-- Git
+## What the System Does
 
-### 1. Clone the repository
+WSF-AMS provides an administrative platform for managing attendance and membership operations across a hierarchical organizational structure.
 
-```bash
-git clone https://github.com/alexemeluedev/WSF-AMS.git
-cd WSF-AMS
+### Organizational Management
+
+* Zone management
+* District management
+* Cell management
+* Member management
+* Member reclassification
+* Hierarchical relationships between zones, districts, and cells
+
+### Attendance Management
+
+* Attendance registration by date and cell
+* Attendance history
+* Attendance summaries
+* Turnout calculations
+* Historical attendance matrix
+* Monthly reporting
+* Zonal reporting
+
+### Administration
+
+* User authentication
+* Role-based access control
+* Administrative user management
+* Controlled user registration
+* Audit history
+* Audit logging for important system actions
+
+### Communication
+
+* Automated attendance summary email dispatch
+* Resend integration for email delivery
+
+### User Experience
+
+* Responsive administrative dashboard
+* Protected application routes
+* Structured navigation
+* Data tables and management interfaces
+* Search, filtering, and pagination where applicable
+
+---
+
+## Why This Project Is Technically Significant
+
+WSF-AMS was designed as a **real-world business management system**, with multiple related data entities and different levels of user access.
+
+The application required coordinating:
+
+```text
+React Frontend
+      |
+      v
+REST API
+      |
+      v
+Express / Node.js
+      |
+      v
+Authentication & Authorization
+      |
+      v
+MongoDB / Mongoose
+      |
+      v
+MongoDB Atlas
 ```
 
-### 2. Install and run the backend
+The project also includes automated frontend and backend testing, GitHub Actions CI, and separate cloud deployments for the frontend and backend.
 
-```bash
-cd backend
-npm install
-npm run dev
-```
+---
 
-Configure the backend environment variables before starting the server:
+## Technology Stack
 
-```env
-JWT_SECRET=your_secure_secret
-MONGO_URI=your_mongodb_connection_string
-CLIENT_URL=http://localhost:5173
-```
+### Frontend
 
-The backend runs on the configured local API port.
+* React
+* Vite
+* Tailwind CSS
+* React Router
+* Jest
+* React Testing Library
+* Babel
 
-### 3. Install and run the frontend
+### Backend
 
-Open another terminal, then run:
+* Node.js
+* Express.js
+* MongoDB
+* Mongoose
+* JWT
+* bcryptjs
+* CORS
+* Resend
+* Jest
+* Supertest
+* MongoDB Memory Server
+
+### DevOps & Deployment
+
+* Git
+* GitHub
+* GitHub Actions
+* Vercel
+* Render
+* MongoDB Atlas
+
+---
+
+## Authentication & Security
+
+The application uses JWT-based authentication to protect private API operations.
+
+Security-related functionality includes:
+
+* JWT authentication
+* Password hashing with bcryptjs
+* Protected API routes
+* Role-based access control
+* Controlled user registration
+* CORS configuration
+* Environment-based secret management
+* Separation of development and production configuration
+
+Sensitive credentials such as database connection strings, JWT secrets, and production configuration are stored through environment variables rather than committed to the repository.
+
+---
+
+## Testing
+
+Testing was treated as part of the application development process rather than an afterthought.
+
+The project maintains separate frontend and backend test suites.
+
+### Frontend Testing
+
+The frontend uses:
+
+* Jest
+* React Testing Library
+* Babel
+
+Run the frontend test suite with:
 
 ```bash
 cd frontend
-npm install
-npm run dev
+npm test -- --runInBand
 ```
 
-The Vite development server normally runs at `http://localhost:5173`.
-Configure the frontend API URL with
-`VITE_API_URL=http://localhost:5000/api`.
+**Current result:**
 
-## Key API Routes
+* 15 test suites passed
+* 87 tests passed
 
-### Authentication
+### Backend Testing
 
-- `POST /api/auth/login`: Authenticates a user and returns a JWT.
-- `POST /api/auth/register`: Creates an administrative or user profile where permitted.
+The backend API uses:
 
-### Attendance
+* Jest
+* Supertest
+* MongoDB Memory Server
+  
+The backend test suite covers authentication, protected API routes, CRUD operations, attendance workflows, organizational data, and administrative functionality.
 
-Attendance routes provide operations for recording, retrieving, updating, and
-summarizing attendance data.
+Run the backend test suite with:
 
-### Administrative controls
+```bash
+cd backend
+npm test -- --runInBand
+```
 
-- `GET /api/audit`: Retrieves audit history for authorized users.
+**Current result:**
 
-The backend also contains routes for members, zones, districts, cells,
-attendance summaries, and other administrative operations.
+* 8 test suites passed
+* 137 tests passed
 
-## Production Configuration
+### Overall Test Results
 
-Production environment variables are configured separately from the source code:
+| Area      | Test Suites |   Tests |
+| --------- | ----------: | ------: |
+| Frontend  |          15 |      87 |
+| Backend   |           8 |     137 |
+| **Total** |      **23** | **224** |
 
-- `MONGO_URI`: MongoDB Atlas connection
-- `JWT_SECRET`: JWT signing secret
-- `CLIENT_URL`: Allowed frontend origin for CORS
-- `VITE_API_URL`: Production backend API URL
+**224 automated tests are currently passing.**
 
-Production secrets are configured through the respective deployment platforms
-and are not committed to the repository.
+---
 
-## Tech Stack
+## Continuous Integration
 
-### Frontend stack
+GitHub Actions is used to automate project checks when changes are pushed to the repository.
 
-- React
-- Vite
-- Tailwind CSS
-- React Router
-- Jest
-- React Testing Library
-- Babel
+The development workflow is:
 
-### Backend stack
+```text
+Code Changes
+     |
+     v
+GitHub
+     |
+     v
+GitHub Actions
+     |
+     +------------------+
+     |                  |
+     v                  v
+Frontend Tests     Backend Tests
+     |                  |
+     +--------+---------+
+              |
+              v
+        Validation Passed
+              |
+              v
+       Deployment Workflow
+```
 
-- Node.js
-- Express.js
-- MongoDB and Mongoose
-- JWT authentication
-- bcryptjs
-- CORS
-- Jest and Supertest
-- MongoDB Memory Server
+The project separates the frontend and backend environments while maintaining a single GitHub repository.
 
-### Deployment and CI
+---
 
-- GitHub and GitHub Actions
-- Vercel
-- Render
-- MongoDB Atlas
+## Production Architecture
+
+```text
+                    Users
+                      |
+                      v
+              React / Vite App
+                      |
+                  Vercel
+                      |
+                      v
+               REST API Requests
+                      |
+                      v
+             Node.js / Express
+                      |
+          +-----------+-----------+
+          |           |           |
+          v           v           v
+       JWT Auth    Business    Resend
+                   Logic       Email
+          |
+          v
+      Mongoose
+          |
+          v
+    MongoDB Atlas
+```
+
+### Production Components
+
+**Frontend**
+
+React/Vite application deployed through Vercel.
+
+**Backend**
+
+Node.js/Express REST API deployed through Render.
+
+**Database**
+
+MongoDB Atlas.
+
+**Email**
+
+Resend integration for automated attendance summary communication.
+
+---
 
 ## Project Structure
 
@@ -175,6 +328,7 @@ WSF-AMS/
 │   │   └── zoneRoutes.js
 │   ├── tests/
 │   └── server.js
+│
 ├── frontend/
 │   ├── public/
 │   ├── src/
@@ -189,129 +343,162 @@ WSF-AMS/
 │   ├── jest.setup.js
 │   ├── vite.config.js
 │   └── package.json
+│
 ├── package.json
 └── README.md
 ```
 
-## Testing
+---
 
-The project uses separate test suites for the frontend and backend.
+## API
 
-### Frontend
+The backend exposes RESTful endpoints for authentication, attendance, members, zones, districts, cells, summaries, and audit operations.
 
-Frontend tests use Jest and React Testing Library.
+### Authentication
 
-```bash
-cd frontend
-npm test -- --runInBand
+```text
+POST /api/auth/login
+POST /api/auth/register
 ```
 
-Current result: 15 test suites passed and 87 tests passed.
+### Attendance
+
+Attendance endpoints support operations for:
+
+* Recording attendance
+* Retrieving attendance
+* Updating attendance
+* Attendance history
+* Attendance summaries
+
+### Audit
+
+```text
+GET /api/audit
+```
+
+Additional API routes handle members, zones, districts, cells, and reporting functionality.
+
+---
+
+## Local Development
+
+### Prerequisites
+
+* Node.js 18+
+* MongoDB or MongoDB Atlas
+* Git
+
+### Clone the repository
+
+```bash
+git clone https://github.com/alexemeluedev/WSF-AMS.git
+cd WSF-AMS
+```
 
 ### Backend
 
-Backend API tests use Jest, Supertest, and MongoDB Memory Server.
-
 ```bash
 cd backend
-npm test -- --runInBand
+npm install
+npm run dev
 ```
 
-Current result: 8 test suites passed and 137 tests passed.
+Create the required environment configuration:
 
-### Test summary
+```env
+JWT_SECRET=your_secure_secret
+MONGO_URI=your_mongodb_connection_string
+CLIENT_URL=http://localhost:5173
+```
 
-| Area      | Suites |   Tests |
-| --------- | -----: | ------: |
-| Frontend  |     15 |      87 |
-| Backend   |      8 |     137 |
-| **Total** | **23** | **224** |
+### Frontend
 
-All current tests are passing.
+Open another terminal:
 
-## Continuous Integration
+```bash
+cd frontend
+npm install
+npm run dev
+```
 
-GitHub Actions runs automated checks when changes are pushed to GitHub. Passing
-checks can trigger deployments to Vercel for the frontend and Render for the
-backend.
+The Vite development server normally runs at:
 
 ```text
-Code changes
-    |
-    v
-GitHub
-    |
-    v
-GitHub Actions
-    |
-    +--> Tests and checks
-    |
-    v
-  Passed
-    |
-    +--> Vercel: frontend deployment
-    |
-    +--> Render: backend deployment
+http://localhost:5173
 ```
 
-## Production Deployment
+Configure the frontend API URL:
 
-### Deployed frontend
+```env
+VITE_API_URL=http://localhost:5000/api
+```
 
-The React/Vite frontend is deployed on
-[Vercel](https://wsf-ams.vercel.app).
+---
 
-### Deployed backend
+## Deployment
 
-The Node.js/Express API is deployed on
-[Render](https://wsf-ams.onrender.com).
+### Frontend
+
+The React/Vite frontend is deployed on Vercel.
+
+https://wsf-ams.vercel.app
+
+### Backend
+
+The Node.js/Express API is deployed on Render.
+
+https://wsf-ams.onrender.com
 
 ### Database
 
-Production application data is stored in MongoDB Atlas.
+Production data is stored in MongoDB Atlas.
 
-### Backend health check
+### Health Check
 
-The backend exposes `GET /api/health`. The production health endpoint is
-[wsf-ams.onrender.com/api/health](https://wsf-ams.onrender.com/api/health).
-A successful response confirms that the backend API is running.
+The backend provides:
 
-## Access Model
+```text
+GET /api/health
+```
 
-The application uses role-based access control. Administrative users can
-manage system users and organizational data, while standard users are
-restricted to the operations permitted by their assigned role.
+Production health endpoint:
 
-User registration is controlled rather than exposed as an unrestricted public
-registration process.
+https://wsf-ams.onrender.com/api/health
 
-## Security
+---
 
-The application uses JWT-based authentication for protected API operations.
-Security-related configuration, including JWT secrets, MongoDB credentials,
-production API configuration, and other private credentials, is provided
-through environment variables and should not be committed to the repository.
+## Key Engineering Highlights
 
-The backend also uses CORS configuration to control which frontend origins are
-permitted to communicate with the API.
+* Full-stack React and Node.js architecture
+* RESTful backend API
+* MongoDB data modeling with Mongoose
+* JWT authentication
+* Password hashing with bcryptjs
+* Role-based access control
+* Hierarchical zone/district/cell structure
+* Member management
+* Attendance workflows
+* Attendance history and reporting
+* Audit logging
+* Automated email dispatch
+* Frontend and backend automated testing
+* **224 passing automated tests**
+* GitHub Actions CI
+* Vercel frontend deployment
+* Render backend deployment
+* MongoDB Atlas production database
 
-## Project Highlights
+---
 
-- Full-stack React and Node.js application
-- MongoDB Atlas production database
-- JWT authentication and role-based access
-- Zone, district, cell, and member management
-- Attendance registration and history
-- Monthly and zonal reporting
-- Audit logging
-- Automated attendance summary dispatch
-- Separate frontend and backend test suites
-- 224 automated tests currently passing
-- GitHub Actions CI
-- Vercel frontend deployment
-- Render backend deployment
+## Portfolio Context
+
+WSF-AMS is one of my more complex full-stack projects and demonstrates my ability to design and implement a complete business application across the frontend, backend, database, authentication, testing, and deployment layers.
+
+The project is particularly focused on **business workflow design, secure API development, data relationships, automated testing, and production deployment**.
+
+---
 
 ## License
 
-This project is intended for portfolio and learning purposes unless otherwise
-specified by the owner.
+This project is intended for portfolio and learning purposes unless otherwise specified by the owner.
